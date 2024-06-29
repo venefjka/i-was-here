@@ -1,17 +1,28 @@
 <template>
   <div>
     <div id="map" style="width: 100vw; height: 100vh"></div>
-    <div class="textbox"></div>
+    <div class="textbox">
+      <h2>{{ title }}</h2>
+      <ImgBlock ref="ImgBlock" />
+      <WeatherBlock ref="WeatherBlock" />
+    </div>
   </div>
 </template>
 
 <script>
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
+import ImgBlock from './ImgBlock.vue'
+import WeatherBlock from './WeatherBlock.vue'
 import axios from 'axios'
+import { weatherRegions, regionsCity } from '../utils'
 
 export default {
   name: 'MapComponent',
+  components: {
+    ImgBlock,
+    WeatherBlock
+  },
   data() {
     return {
       width: 1500,
@@ -76,6 +87,7 @@ export default {
 
       this.svg.call(this.zoom)
     },
+
     reset() {
       this.g.selectAll('path').transition().style('fill', null)
       this.svg
@@ -88,9 +100,10 @@ export default {
         )
       document.querySelector('.textbox').style.display = 'none'
     },
+
     clicked(event, d) {
       const [[x0, y0], [x1, y1]] = this.path.bounds(d)
-      
+
       event.stopPropagation()
       this.g.selectAll('path').transition().style('fill', '#F2F2EF')
       d3.select(event.currentTarget).transition().style('fill', '#759242')
@@ -105,16 +118,27 @@ export default {
             .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
           d3.pointer(event, this.svg.node())
         )
-      this.viewTextBox(d)
+
+        let weatherRegion = d.properties.name
+        const unvalidRegion = Object.keys(weatherRegions).find(
+          (key) => weatherRegions[key] === weatherRegion
+        )
+        if (unvalidRegion) weatherRegion = regionsCity[unvalidRegion]
+
+        this.viewTextBox(d)
+        this.$refs.ImgBlock.fetchImages(weatherRegion)
+        this.$refs.WeatherBlock.fetchWeather(weatherRegion)
     },
+
     zoomed(event) {
       const { transform } = event
       this.g.attr('transform', transform)
       this.g.attr('stroke-width', 1 / transform.k)
     },
+
     viewTextBox(d) {
-      document.querySelector('.textbox').style.display = 'block';
-      console.log(d.properties.name)
+      document.querySelector('.textbox').style.display = 'block'
+      this.title = d.properties.name
     }
   }
 }
@@ -141,5 +165,28 @@ svg {
   border-radius: 17px;
   box-shadow: 0 0 8px rgb(173, 173, 173);
   display: none;
+  text-align: center;
+  font-size: medium;
+  font-weight: bolder;
+  font-family: Arial, sans-serif;
+  margin: 20px 15px;
+}
+h2 {
+  text-align: center;
+  font-size: large;
+  font-weight: bolder;
+  font-family: Arial, sans-serif;
+  margin: 20px 15px;
+}
+#weatherInfo {
+  height: 15%;
+  margin: 0px 15px;
+  padding: 7px 5px;
+  display: flex;
+  background-color: #fafafa;
+  box-shadow: inset 0 0 12px rgb(240, 240, 240);
+  border-radius: 14px;
+  place-content: center;
+  justify-content: space-evenly;
 }
 </style>
