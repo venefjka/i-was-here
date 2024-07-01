@@ -1,12 +1,4 @@
 <template>
-  <div class="image-container">
-    <img class="image"
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVC50hZCTVNiRJj8LwK5CbdV9qAOYiF1HCng&s"
-    />
-    <img class="image"
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVC50hZCTVNiRJj8LwK5CbdV9qAOYiF1HCng&s"
-    />
-  </div>
   <div v-if="images.length" class="image-container">
     <img
       v-for="(image, index) in images"
@@ -14,6 +6,17 @@
       :src="image.link"
       :alt="image.title"
       class="image"
+    />
+  </div>
+
+  <div v-else class="image-container">
+    <img
+      class="image"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVC50hZCTVNiRJj8LwK5CbdV9qAOYiF1HCng&s"
+    />
+    <img
+      class="image"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVC50hZCTVNiRJj8LwK5CbdV9qAOYiF1HCng&s"
     />
   </div>
 </template>
@@ -58,7 +61,7 @@ export default {
               link: item.link,
               title: item.title
             })
-            if (this.images.length >= 2) break 
+            if (this.images.length >= 2) break
           }
         }
       } catch (error) {
@@ -69,7 +72,7 @@ export default {
     checkImage(url) {
       return new Promise((resolve) => {
         var img = new Image()
-        var timeout = 5 
+        var timeout = 1000
 
         var timer = setTimeout(() => {
           img.src = 'about:blank' // Отмена загрузки

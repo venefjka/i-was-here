@@ -3,6 +3,7 @@
     <div id="map" style="width: 100vw; height: 100vh"></div>
     <div class="textbox">
       <h2>{{ title }}</h2>
+      <DescBlock ref="DescBlock" />
       <ImgBlock ref="ImgBlock" />
       <WeatherBlock ref="WeatherBlock" />
     </div>
@@ -12,6 +13,7 @@
 <script>
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
+import DescBlock from './DescBlock.vue'
 import ImgBlock from './ImgBlock.vue'
 import WeatherBlock from './WeatherBlock.vue'
 import axios from 'axios'
@@ -20,6 +22,7 @@ import { weatherRegions, regionsCity } from '../utils'
 export default {
   name: 'MapComponent',
   components: {
+    DescBlock,
     ImgBlock,
     WeatherBlock
   },
@@ -119,15 +122,17 @@ export default {
           d3.pointer(event, this.svg.node())
         )
 
-        let weatherRegion = d.properties.name
-        const unvalidRegion = Object.keys(weatherRegions).find(
-          (key) => weatherRegions[key] === weatherRegion
-        )
-        if (unvalidRegion) weatherRegion = regionsCity[unvalidRegion]
+      this.viewTextBox(d)
+      this.$refs.DescBlock.fetchDesc(d.properties.name)
 
-        this.viewTextBox(d)
-        this.$refs.ImgBlock.fetchImages(weatherRegion)
-        this.$refs.WeatherBlock.fetchWeather(weatherRegion)
+      let weatherRegion = d.properties.name
+      const unvalidRegion = Object.keys(weatherRegions).find(
+        (key) => weatherRegions[key] === weatherRegion
+      )
+      if (unvalidRegion) weatherRegion = regionsCity[unvalidRegion]
+
+      this.$refs.ImgBlock.fetchImages(weatherRegion)
+      this.$refs.WeatherBlock.fetchWeather(weatherRegion)
     },
 
     zoomed(event) {
@@ -165,11 +170,14 @@ svg {
   border-radius: 17px;
   box-shadow: 0 0 8px rgb(173, 173, 173);
   display: none;
-  text-align: center;
+  text-align: justify;
   font-size: medium;
   font-weight: bolder;
   font-family: Arial, sans-serif;
   margin: 20px 15px;
+  overflow: scroll;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
 }
 h2 {
   text-align: center;
