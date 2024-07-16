@@ -1,10 +1,13 @@
 <template>
   <div id="weatherInfo" v-if="weatherData">
-    <div style="display: flex; flex-direction: column; align-items: center;">
-      <img style="width: 80px; height: auto;" :src="weatherIconUrl" alt="Погода" />
-      <div class="weather-temp">{{ weatherData.main.temp }}°C</div>
+    <img src="../assets/weather.png" id="a1"/>
+    <div class="weather-icon">
+      <img :src="weatherIconUrl" alt="Погода" />
     </div>
-    <div class="weather-desc">{{ weatherData.weather[0].description }}</div>
+    <div class="weather-details">
+      <div class="weather-temp">{{ weatherData.main.temp }}°C</div>
+      <div class="weather-desc">{{ weatherData.weather[0].description }}</div>
+    </div>
   </div>
 </template>
 
@@ -39,31 +42,36 @@ export default {
   }
 }
 </script>
-
 <style>
+#a1 {
+  opacity: 25%;
+    height: -webkit-fill-available;
+    width: 35%;
+    position: relative;
+    border-radius: 10px;
+}
 #weatherInfo {
-  justify-content: center;
-  align-items: center;
-}
-
-.weather-temp {
-  box-shadow: 0 0 3px rgb(236, 236, 236);
-  font-size: 14px;
-  width: 80px;
-  border-radius: 15px;
-  background: #ffffff;
-  font-family: Arial;
-  color: #535353;
-  position: relative;
-  top: -20px;
-  height: 20px;
+  height: 10vh;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 10px 30px;
 }
-
+.weather-icon img {
+  width: 50px;
+  height: auto;
+}
+.weather-details {
+  margin-left: 10px;
+}
+.weather-temp {
+  font-size: 1.2em;
+  font-weight: bold;
+}
 .weather-desc {
-  place-content: center;
-  margin: 0px 15px;
-  text-align: center;
+  font-size: 0.9em;
+  color: #666;
 }
 </style>

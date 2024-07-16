@@ -14,7 +14,7 @@
     "axios": "^1.7.2",
     "d3": "^7.9.0",
     "topojson": "^3.0.2",
-    "vue": "^3.4.29"
+    "vue": "^3.4.31"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
